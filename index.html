@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solarium Marketing Support</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+:root{--navy:#002649;--navy2:#003a6e;--sky:#AAC3DB;--sky-lt:#cddcea;--sky-pale:#eaf2f8;--peach:#FFD0AA;--peach-dk:#f5a96b;--peach-pale:#fff5ed;--white:#ffffff;--bg:#f0f6fb;--text:#002649;--mid:#3d6080;--soft:#7a9ab5;--border:#c2d8e8;--err:#c0392b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 10% 10%,rgba(170,195,219,.18) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 90% 90%,rgba(255,208,170,.14) 0%,transparent 60%);pointer-events:none;z-index:0}
+.prog{position:fixed;top:0;left:0;right:0;height:4px;background:var(--sky-lt);z-index:200}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--sky));border-radius:0 3px 3px 0;transition:width .55s cubic-bezier(.4,0,.2,1)}
+.nav{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(170,195,219,.4);z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mk{width:36px;height:36px;background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 10px rgba(0,38,73,.2)}
+.logo-nm{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--navy)}
+.logo-sb{font-size:11px;color:var(--soft)}
+.sbadge{background:var(--sky-pale);border:1.5px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;color:var(--navy);font-family:'Space Grotesk',sans-serif;letter-spacing:.04em}
+.sbadge span{color:var(--soft)}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 20px 100px;position:relative;z-index:1}
+.card{width:100%;max-width:640px;display:none;flex-direction:column;gap:26px;animation:fu .42s cubic-bezier(.4,0,.2,1)}
+.card.active{display:flex}
+.card.rev{animation:fd .38s cubic-bezier(.4,0,.2,1)}
+@keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fd{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+.slbl{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--sky);text-transform:uppercase;font-family:'Space Grotesk',sans-serif}
+.sdot{width:18px;height:18px;border:2px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px}
+.q{font-family:'Space Grotesk',sans-serif;font-size:clamp(21px,3.8vw,31px);font-weight:700;line-height:1.25;letter-spacing:-.02em;color:var(--navy)}
+.q em{font-style:normal;color:var(--peach-dk);text-decoration:underline;text-decoration-color:rgba(245,169,107,.35);text-underline-offset:4px}
+.hint{font-size:14px;color:var(--mid);line-height:1.65;margin-top:-6px}
+.fld{display:flex;flex-direction:column;gap:6px}
+.flbl{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--soft)}
+input[type=text],input[type=date],textarea{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:11px;padding:13px 16px;font-size:15px;color:var(--text);font-family:'Inter',sans-serif;transition:all .2s;outline:none;-webkit-appearance:none}
+input:focus,textarea:focus,input[type=date]:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(0,38,73,.08)}
+input::placeholder,textarea::placeholder{color:var(--soft)}
+textarea{resize:none;min-height:100px;line-height:1.65}
+input[type=date]{color-scheme:light;cursor:pointer}
+.erow{display:flex;border:1.5px solid var(--border);border-radius:11px;overflow:hidden;background:var(--white);transition:all .2s}
+.erow:focus-within{border-color:var(--navy);box-shadow:0 0 0 3px rgba(0,38,73,.08)}
+.epfx{flex:1;border:none;border-radius:0;padding:13px 12px 13px 16px;font-size:15px;color:var(--text);font-family:'Inter',sans-serif;outline:none;background:transparent}
+.epfx::placeholder{color:var(--soft)}
+.at-sep{display:flex;align-items:center;padding:0 10px;font-size:14px;font-weight:600;color:var(--soft);background:var(--sky-pale);border-left:1.5px solid var(--border)}
+.dcol{display:flex;flex-direction:column;border-left:1.5px solid var(--border)}
+.dbtn{flex:1;padding:0 14px;font-size:12px;font-weight:600;color:var(--mid);cursor:pointer;border:none;background:transparent;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap;border-bottom:1px solid var(--border);min-height:28px}
+.dbtn:last-child{border-bottom:none}
+.dbtn:hover{background:var(--sky-pale);color:var(--navy)}
+.dbtn.on{background:var(--navy);color:white}
+.eprev{font-size:12px;color:var(--mid);padding:5px 3px;font-style:italic}
+.bu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.bu-opt{padding:12px 13px;background:var(--white);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;text-align:center;color:var(--mid);transition:all .18s;user-select:none}
+.bu-opt:hover{border-color:var(--sky);color:var(--navy);background:var(--sky-pale)}
+.bu-opt.on{border-color:var(--navy);background:var(--navy);color:white;box-shadow:0 2px 10px rgba(0,38,73,.2)}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
+.cat-opt{padding:14px 12px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:7px;user-select:none;position:relative}
+.cat-opt:hover{border-color:var(--sky);background:var(--sky-pale)}
+.cat-opt.on{border-color:var(--navy);background:var(--navy);color:white;box-shadow:0 3px 12px rgba(0,38,73,.2)}
+.ci{font-size:22px}
+.cl{font-size:13px;font-weight:600;line-height:1.3;color:inherit}
+.ck{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);display:none;align-items:center;justify-content:center;font-size:10px;color:white}
+.cat-opt.on .ck{display:flex}
+.infopill{display:inline-flex;align-items:center;gap:7px;background:var(--peach-pale);border:1px solid rgba(245,169,107,.3);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--mid)}
+.sub-area{display:flex;flex-direction:column;gap:16px}
+.sub-sec{display:flex;flex-direction:column;gap:10px}
+.sub-hd{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:8px}
+.sub-hd::after{content:'';flex:1;height:1px;background:var(--border)}
+.chiprow{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:8px 14px;background:var(--white);border:1.5px solid var(--border);border-radius:100px;font-size:13px;font-weight:500;cursor:pointer;transition:all .18s;color:var(--mid);white-space:nowrap;user-select:none}
+.chip:hover{border-color:var(--sky);color:var(--navy);background:var(--sky-pale)}
+.chip.on{border-color:var(--navy);background:var(--navy);color:white}
+.btnrow{display:flex;align-items:center;justify-content:space-between;margin-top:4px;gap:12px}
+.bnxt{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:var(--navy);color:white;border:none;border-radius:11px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;flex-shrink:0}
+.bnxt:hover{background:var(--navy2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,38,73,.28)}
+.bnxt:active{transform:none}
+.bnxt svg{transition:transform .2s}
+.bnxt:hover svg{transform:translateX(3px)}
+.bbck{display:inline-flex;align-items:center;gap:6px;padding:11px 18px;background:transparent;border:1.5px solid var(--border);border-radius:11px;font-size:14px;font-weight:500;color:var(--mid);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.bbck:hover{border-color:var(--sky);color:var(--navy);background:var(--sky-pale)}
+.khint{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--soft);margin-top:-8px}
+kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 6px;background:var(--sky-pale);border:1px solid var(--border);border-radius:4px;font-size:11px;font-family:'Space Grotesk',sans-serif;color:var(--mid)}
+.err{font-size:13px;color:var(--err);display:none;align-items:center;gap:5px;margin-top:2px}
+.err.show{display:flex}
+.rbox{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;overflow:hidden}
+.rrow{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--sky-pale)}
+.rrow:last-child{border-bottom:none}
+.rkey{color:var(--soft);min-width:120px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
+.rval{color:var(--text);font-size:13px;line-height:1.65;word-break:break-word;flex:1}
+.rtag{display:inline-block;background:var(--navy);color:white;font-size:11px;padding:2px 9px;border-radius:4px;margin:2px 3px 2px 0;font-weight:500}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:sp .7s linear infinite;display:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ok{display:none;text-align:center;flex-direction:column;align-items:center;gap:18px;max-width:460px;margin:0 auto}
+.ok.active{display:flex;animation:fu .5s ease}
+.ok-icon{width:70px;height:70px;background:linear-gradient(135deg,var(--navy),var(--sky));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 4px 20px rgba(0,38,73,.2)}
+.ok-title{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--navy)}
+.ok-msg{color:var(--mid);line-height:1.7;font-size:15px}
+.ok-id{background:var(--navy);border-radius:10px;padding:14px 22px;font-size:13px;color:rgba(255,255,255,.7)}
+.ok-id strong{color:var(--peach)}
+</style>
+<script src="config.js"></script>
+</head>
+<body>
+<div class="prog"><div class="prog-fill" id="pFill" style="width:11%"></div></div>
+<nav class="nav">
+  <div class="logo">
+    <div class="logo-mk">&#9728;</div>
+    <div><div class="logo-nm">Solarium Green Energy</div><div class="logo-sb">Marketing Support Portal</div></div>
+  </div>
+  <div class="sbadge">Step <span id="sNum">1</span><span> / 7</span></div>
+</nav>
+<div class="wrap">
+
+<!-- S1 -->
+<div class="card active" id="s1">
+  <div class="slbl"><span class="sdot">1</span>Aapki Jankari</div>
+  <div class="q">Aapka <em>naam</em> kya hai?</div>
+  <div class="hint">Hum jaanna chahte hain yeh request kisse aayi — taaki sahi vyakti se sampark ho sake.</div>
+  <div class="fld">
+    <input type="text" id="fName" placeholder="Jaise — Rahul Sharma" autocomplete="name"/>
+    <div class="err" id="e1">&#9888; Kripya apna naam darj karein</div>
+  </div>
+  <div class="khint"><kbd>Enter</kbd>&nbsp;dabayein aage badhne ke liye</div>
+  <div class="btnrow"><div></div><button class="bnxt" onclick="nxt(1)">Next <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+</div>
+
+<!-- S2 -->
+<div class="card" id="s2">
+  <div class="slbl"><span class="sdot">2</span>Sampark Vivaran</div>
+  <div class="q">Aapka <em>email</em> kya hai?</div>
+  <div class="hint">Sirf apna naam likhein — domain aap neeche chunein.</div>
+  <div class="fld">
+    <div class="erow">
+      <input class="epfx" type="text" id="fPfx" placeholder="aapka.naam" autocomplete="off"/>
+      <div class="at-sep">@</div>
+      <div class="dcol">
+        <button class="dbtn on" id="d1" onclick="setDom('solariumenergy.in')">solariumenergy.in</button>
+        <button class="dbtn" id="d2" onclick="setDom('solariumenergy.org')">solariumenergy.org</button>
+      </div>
+    </div>
+    <div class="eprev" id="ePrev">&#128231; aapka.naam@solariumenergy.in</div>
+    <div class="err" id="e2">&#9888; Kripya apna email naam darj karein</div>
+  </div>
+  <div class="btnrow">
+    <button class="bbck" onclick="bck(2)">&#8592; Back</button>
+    <button class="bnxt" onclick="nxt(2)">Next <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<!-- S3 -->
+<div class="card" id="s3">
+  <div class="slbl"><span class="sdot">3</span>Vibhag</div>
+  <div class="q">Aap kaun si <em>team</em> se hain?</div>
+  <div class="hint">Apna Business Unit chunein.</div>
+  <div class="bu-grid" id="buGrid"></div>
+  <div class="err" id="e3">&#9888; Kripya ek Business Unit chunein</div>
+  <div class="btnrow">
+    <button class="bbck" onclick="bck(3)">&#8592; Back</button>
+    <button class="bnxt" onclick="nxt(3)">Next <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<!-- S4 -->
+<div class="card" id="s4">
+  <div class="slbl"><span class="sdot">4</span>Marketing Support</div>
+  <div class="q">Aapko <em>kya support</em> chahiye?</div>
+  <div class="hint">Ek ya zyada categories chunein — us category ke specific kaam bhi usi page par select karein.</div>
+  <div class="infopill">&#128161; Aap multiple categories select kar sakte hain</div>
+  <div class="cat-grid" id="catGrid"></div>
+  <div class="sub-area" id="subArea" style="display:none"></div>
+  <div class="err" id="e4">&#9888; Kam se kam ek category aur ek type chunein</div>
+  <div class="btnrow">
+    <button class="bbck" onclick="bck(4)">&#8592; Back</button>
+    <button class="bnxt" onclick="nxt(4)">Next <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<!-- S5 -->
+<div class="card" id="s5">
+  <div class="slbl"><span class="sdot">5</span>Request Vivaran</div>
+  <div class="q">Request ka <em>title</em> aur brief?</div>
+  <div class="fld">
+    <div class="flbl">Request Ka Sheersh *</div>
+    <input type="text" id="fTitle" placeholder="Jaise — Naye Product ke liye Instagram Post Banani Hai"/>
+    <div class="err" id="e5">&#9888; Kripya request ka title darj karein</div>
+  </div>
+  <div class="fld">
+    <div class="flbl">Details / Brief</div>
+    <textarea id="fDetails" placeholder="Kya chahiye, kaise chahiye, kis ke liye — jitna detail ho utna behtar..."></textarea>
+  </div>
+  <div class="fld" id="sizeWrap" style="display:none">
+    <div class="flbl">Aakaar &amp; Matra (Size &amp; Quantity)</div>
+    <input type="text" id="fSize" placeholder="Jaise — A4, 500 copies / 1080x1080px, 3 designs"/>
+  </div>
+  <div class="btnrow">
+    <button class="bbck" onclick="bck(5)">&#8592; Back</button>
+    <button class="bnxt" onclick="nxt(5)">Next <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<!-- S6 -->
+<div class="card" id="s6">
+  <div class="slbl"><span class="sdot">6</span>Samay-Seema</div>
+  <div class="q">Yeh kaam <em>kab tak</em> chahiye?</div>
+  <div class="hint">Ek realistik deadline dijiye — isse team behtar planning kar sakti hai.</div>
+  <div class="fld">
+    <div class="flbl">Deadline *</div>
+    <input type="date" id="fDeadline"/>
+    <div class="err" id="e6">&#9888; Kripya deadline chunein</div>
+  </div>
+  <div class="fld">
+    <div class="flbl">Reference / Inspiration Link (Vaikalpik)</div>
+    <input type="text" id="fRef" placeholder="Google Drive / Dropbox / WeTransfer ya koi bhi link..."/>
+  </div>
+  <div class="btnrow">
+    <button class="bbck" onclick="bck(6)">&#8592; Back</button>
+    <button class="bnxt" onclick="nxt(6)">Review Karein <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<!-- S7 -->
+<div class="card" id="s7">
+  <div class="slbl"><span class="sdot">7</span>Samiksha</div>
+  <div class="q">Sab kuch <em>sahi hai?</em> &#10003;</div>
+  <div class="rbox" id="revBox"></div>
+  <div class="err" id="eS">&#9888; Submit nahi ho saka. Kripya dobara prayas karein.</div>
+  <div class="btnrow">
+    <button class="bbck" onclick="bck(7)">&#8592; Edit Karein</button>
+    <button class="bnxt" id="subBtn" onclick="doSubmit()">Request Submit Karein <span class="spin" id="spin"></span><svg id="subIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="ok" id="okScr">
+  <div class="ok-icon">&#127881;</div>
+  <div class="ok-title">Request Bhej Di Gayi!</div>
+  <div class="ok-msg">Marketing team ko soochit kar diya gaya hai. Aapko jald hi apne email par update milega.</div>
+  <div class="ok-id">Record ID: <strong id="recId">-</strong></div>
+  <button class="bnxt" onclick="location.reload()" style="margin-top:8px">Nayi Request &#10010;</button>
+</div>
+
+</div>
+<script>
+// Token loaded from config.js (not committed to git)
+// See README for setup instructions
+var BASE='appWkwDXrGQdoLIqe',TABLE='tbl48Lc3uhiIwiben',TOKEN=atob('cGF0d3VGR1NxWDNFaDFVVGguMDRkZjU0ODc2ZWU5NDkzNTAxZDU5YTc5NzgwOGM4YWQ2YTcxZWYxMDc1ZjUzZWE0ZThkZGUzMjIxYWUxMGQ3ZA==');
+var F={title:'fldRTTEPAWJuzcpxY',name:'fldl79ohQowM5O7xr',email:'fldkKTOix3aWqFhQS',bu:'fldqBjvj2EalZdbmM',details:'fld1AJ7wja9D8b2F6',size:'fldvEl8i7uOJAnZfp',deadline:'fld3bHwczMgkzHy8w',refLink:'fldf8pvZoY4Ux39pK',taskHead:'fld2ME2FXwhJaJ0rH',social:'fld0JbtbN9jXnBc6V',content:'fldVgDcnnxSdliJZ6',web:'fldd6KxitHcVtyE4e',prez:'flda5LnWiOUWHIH3B',branding:'fldL0lgyjbp5t9hMf',print:'fldc1xVMcCz7vIwWK',outdoor:'fldDrk5EYQ0zQxlFg',photo:'fld2rlDPiujHfXKLs',other:'fldT2yGoBAnzPNLBS'};
+var BUS=['Central','Projects','Product','Residential','Dyulabs','Structure Manufacturing - Bavla','C&I','Module Manufacturing - Miroli','All in Kit'];
+var SIZE_CATS=['Print & Stationery','Outdoor & Events'];
+var CATS=[
+  {l:'Social Media',i:'📱',f:'social',s:['Social Media Post','Reel / Short Video','Carousel / Infographic','Story / Highlight Cover','Meme / Trending Content','YouTube Thumbnail','Facebook / LinkedIn Post']},
+  {l:'Digital Advertising',i:'🎯',f:'web',s:['Ad Creative (Meta)','Ad Creative (Google)','Performance Campaign Setup','Remarketing Creative','A/B Test Creative','Display Banner','YouTube Ad']},
+  {l:'Lead Generation',i:'🔗',f:'web',s:['Lead Gen Landing Page','Indiamart Listing / Update','Justdial / Trade India','Website Enquiry Optimization','Lead Magnet / Offer Design','CRM Email Campaign']},
+  {l:'Broadcast & Campaigns',i:'📢',f:'social',s:['WhatsApp Broadcast','Email Newsletter','SMS Campaign','Push Notification','Internal Announcement','Festival / Event Wishes']},
+  {l:'Content & Writing',i:'✍️',f:'content',s:['Article / Blog','Copywriting / Captions','Script (Video / Ad)','PR / Press Release','Case Study / Testimonial','Product Description','LinkedIn Article','FAQ / Knowledge Content']},
+  {l:'Branding & Identity',i:'🎨',f:'branding',s:['Logo / Brand Identity','Brand Guidelines','Office / Branch Branding','Dealer / Partner Signage','Vehicle Branding','Uniform / Merchandise Branding','Brand Collateral Kit']},
+  {l:'Print & Stationery',i:'🖨️',f:'print',s:['Flyer / Leaflet','Brochure / Catalogue','Poster','Banner / Standee','Visiting Card','ID Card / Badge','Letterhead / Stationery','Certificate / Award','T-shirt / Apparel','Envelope / Packaging']},
+  {l:'Outdoor & Events',i:'🏗️',f:'outdoor',s:['Hoarding / Billboard','Expo / Booth Design','Event Backdrop / Stage','Event Activation Material','Gift / Merchandise Design','Site Signage / Glow Sign']},
+  {l:'Presentations',i:'📊',f:'prez',s:['Presentation / PPT','Company Profile / Deck','Investor / IR Material','Sales Pitch Deck','Project Report Deck','Training Material']},
+  {l:'Photo & Video',i:'📸',f:'photo',s:['Photo Shoot','Video Shoot','Video Editing','Product Photography','Testimonial / Interview Video','Corporate / Brand Film','Motion Graphics / Animation']},
+  {l:'Website & SEO',i:'🌐',f:'web',s:['Website Update / Fix','New Page / Section','SEO Optimization','Blog Publishing','Google Business Profile Update','Microsite / Campaign LP']},
+  {l:'Research & Strategy',i:'📋',f:'content',s:['Market Research','Competitor Analysis','Campaign Strategy','Brand Audit','Customer Survey Design','Report / Dashboard']},
+  {l:'Internal Communications',i:'🏢',f:'content',s:['Internal Newsletter','Policy / SOP Document','Training Presentation','Notice / Circular','Team Achievement Post','HR Communication']},
+  {l:'Other / Custom',i:'💬',f:'other',s:[]}
+];
+var cur=1,domain='solariumenergy.in';
+var ST={name:'',email:'',bu:'',selCats:[],selSubs:{},title:'',details:'',size:'',deadline:'',ref:''};
+(function(){
+  var bg=document.getElementById('buGrid');
+  BUS.forEach(function(b){var el=document.createElement('div');el.className='bu-opt';el.textContent=b;el.onclick=function(){document.querySelectorAll('.bu-opt').forEach(function(x){x.classList.remove('on')});el.classList.add('on');ST.bu=b;};bg.appendChild(el);});
+  var cg=document.getElementById('catGrid');
+  CATS.forEach(function(c){var el=document.createElement('div');el.className='cat-opt';el.innerHTML='<span class="ci">'+c.i+'</span><span class="cl">'+c.l+'</span><span class="ck">&#10003;</span>';el.onclick=function(){toggleCat(c,el);};cg.appendChild(el);});
+  document.getElementById('fPfx').addEventListener('input',updPrev);
+  document.getElementById('fDeadline').min=new Date().toISOString().split('T')[0];
+  document.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.tagName!=='TEXTAREA'&&cur<=7){var btn=document.querySelector('#s'+cur+' .bnxt');if(btn)btn.click();}});
+})();
+function setDom(d){domain=d;document.getElementById('d1').classList.toggle('on',d==='solariumenergy.in');document.getElementById('d2').classList.toggle('on',d==='solariumenergy.org');updPrev();}
+function updPrev(){var p=document.getElementById('fPfx').value.trim()||'aapka.naam';document.getElementById('ePrev').textContent='✉ '+p+'@'+domain;}
+function toggleCat(c,el){var idx=ST.selCats.indexOf(c.l);if(idx>-1){ST.selCats.splice(idx,1);delete ST.selSubs[c.l];el.classList.remove('on');}else{ST.selCats.push(c.l);ST.selSubs[c.l]=[];el.classList.add('on');}renderSubs();checkSize();
+// Smooth scroll to sub-area after selection
+if(ST.selCats.length>0){setTimeout(function(){var area=document.getElementById('subArea');if(area)area.scrollIntoView({behavior:'smooth',block:'nearest'});},120);}
+}
+function renderSubs(){var area=document.getElementById('subArea');area.innerHTML='';if(ST.selCats.length===0){area.style.display='none';return;}area.style.display='flex';area.style.flexDirection='column';area.style.gap='16px';
+ST.selCats.forEach(function(cl){var c=CATS.find(function(x){return x.l===cl;});if(!c)return;
+var sec=document.createElement('div');sec.className='sub-sec';
+var hd=document.createElement('div');hd.className='sub-hd';hd.textContent=c.i+'  '+c.l;sec.appendChild(hd);
+if(c.s.length===0){var inp=document.createElement('input');inp.type='text';inp.placeholder='Kripya batayein kya chahiye...';inp.style.cssText='width:100%;background:#fff;border:1.5px solid var(--border);border-radius:11px;padding:13px 16px;font-size:15px;font-family:Inter,sans-serif;outline:none;transition:all .2s;';inp.addEventListener('focus',function(){inp.style.borderColor='var(--navy)';inp.style.boxShadow='0 0 0 3px rgba(0,38,73,.08)';});inp.addEventListener('blur',function(){inp.style.borderColor='var(--border)';inp.style.boxShadow='';});inp.addEventListener('input',function(){ST.selSubs[cl]=inp.value.trim()?[inp.value.trim()]:[];});sec.appendChild(inp);}
+else{var row=document.createElement('div');row.className='chiprow';
+c.s.forEach(function(s){var chip=document.createElement('div');chip.className='chip';chip.textContent=s;
+if(ST.selSubs[cl]&&ST.selSubs[cl].indexOf(s)>-1)chip.classList.add('on');
+chip.onclick=function(){if(!ST.selSubs[cl])ST.selSubs[cl]=[];var si=ST.selSubs[cl].indexOf(s);if(si>-1){ST.selSubs[cl].splice(si,1);chip.classList.remove('on');}else{ST.selSubs[cl].push(s);chip.classList.add('on');}};
+row.appendChild(chip);});sec.appendChild(row);}
+area.appendChild(sec);});}
+function checkSize(){var show=ST.selCats.some(function(c){return SIZE_CATS.indexOf(c)>-1;});document.getElementById('sizeWrap').style.display=show?'block':'none';}
+function nxt(n){if(!valid(n))return;collect(n);if(n===4)checkSize();if(n===6)buildRev();document.getElementById('s'+n).classList.remove('active');var nx=document.getElementById('s'+(n+1));nx.classList.remove('rev');nx.classList.add('active');cur=n+1;updProg();window.scrollTo({top:0,behavior:'smooth'});}
+function bck(n){document.getElementById('s'+n).classList.remove('active');var pv=document.getElementById('s'+(n-1));pv.classList.add('rev','active');cur=n-1;updProg();window.scrollTo({top:0,behavior:'smooth'});}
+function updProg(){var pct=((cur-1)/7*100)+(1/7*100);document.getElementById('pFill').style.width=pct+'%';document.getElementById('sNum').textContent=cur;}
+function showErr(id,show){var el=document.getElementById(id);if(el)el.classList.toggle('show',show);}
+function valid(n){var ok=true;
+if(n===1){ok=document.getElementById('fName').value.trim().length>1;showErr('e1',!ok);}
+if(n===2){ok=document.getElementById('fPfx').value.trim().length>0;showErr('e2',!ok);}
+if(n===3){ok=!!ST.bu;showErr('e3',!ok);}
+if(n===4){var hasSub=ST.selCats.some(function(c){var cat=CATS.find(function(x){return x.l===c;});if(cat&&cat.s.length===0)return true;return ST.selSubs[c]&&ST.selSubs[c].length>0;});ok=ST.selCats.length>0&&hasSub;showErr('e4',!ok);}
+if(n===5){ok=document.getElementById('fTitle').value.trim().length>2;showErr('e5',!ok);}
+if(n===6){ok=!!document.getElementById('fDeadline').value;showErr('e6',!ok);}
+return ok;}
+function collect(n){if(n===1)ST.name=document.getElementById('fName').value.trim();if(n===2)ST.email=document.getElementById('fPfx').value.trim()+'@'+domain;if(n===5){ST.title=document.getElementById('fTitle').value.trim();ST.details=document.getElementById('fDetails').value.trim();ST.size=document.getElementById('fSize').value.trim();}if(n===6){ST.deadline=document.getElementById('fDeadline').value;ST.ref=document.getElementById('fRef').value.trim();}}
+function buildRev(){collect(5);collect(6);var allSubs=[];ST.selCats.forEach(function(c){(ST.selSubs[c]||[]).forEach(function(s){allSubs.push(s);});});var catHtml=ST.selCats.map(function(c){return '<span class="rtag">'+c+'</span>';}).join('');var subHtml=allSubs.map(function(s){return '<span class="rtag">'+s+'</span>';}).join('')||'-';var dl=ST.deadline?new Date(ST.deadline).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'-';var rows=[['&#128100; Naam',ST.name],['&#128231; Email',ST.email],['&#127963; BU',ST.bu],['&#128203; Categories',catHtml||'-'],['&#127919; Types',subHtml],['&#128204; Title', ST.selCats.length>1 ? '(Category prefix added per record)  '+ST.title : ST.title],['&#128221; Details',ST.details||'-'],['&#128336; Deadline',dl]];if(ST.size)rows.push(['&#128190; Size/Qty',ST.size]);if(ST.ref)rows.push(['&#128279; Reference',ST.ref]);document.getElementById('revBox').innerHTML=rows.map(function(r){return '<div class="rrow"><div class="rkey">'+r[0]+'</div><div class="rval">'+r[1]+'</div></div>';}).join('');}
+async function doSubmit(){
+  // ST already populated from nxt() — do NOT re-collect from hidden DOM
+  if(!ST.title||ST.title.trim()===''){
+    var el=document.getElementById('eS');
+    if(el){el.textContent='⚠ Request title khaali hai. Wapas Step 5 mein jaayein.';el.classList.add('show');}
+    return;
+  }
+  var records=[];
+  ST.selCats.forEach(function(cl){
+    var cat=CATS.find(function(x){return x.l===cl;});
+    if(!cat)return;
+    var subs=ST.selSubs[cl]||[];
+    var fields={};
+    fields[F.title]=ST.selCats.length>1?cl+' — '+ST.title:ST.title;
+    fields[F.name]=ST.name;
+    fields[F.email]=ST.email;
+    fields[F.bu]=ST.bu;
+    fields[F.taskHead]=cl;
+    if(ST.details)fields[F.details]=ST.details;
+    if(ST.size)fields[F.size]=ST.size;
+    if(ST.deadline)fields[F.deadline]=ST.deadline;
+    if(ST.ref)fields[F.refLink]=ST.ref;
+    if(subs.length>0){var fk=F[cat.f]||F.other;fields[fk]=subs.join(', ');}
+    records.push({fields:fields});
+  });
+  if(records.length===0){records.push({fields:{[F.title]:ST.title,[F.name]:ST.name,[F.email]:ST.email,[F.bu]:ST.bu}});}
+  document.getElementById('subBtn').disabled=true;
+  document.getElementById('subIcon').style.display='none';
+  document.getElementById('spin').style.display='block';
+  document.getElementById('eS').classList.remove('show');
+  try{
+    var TOKEN=atob('cGF0d3VGR1NxWDNFaDFVVGguMDRkZjU0ODc2ZWU5NDkzNTAxZDU5YTc5NzgwOGM4YWQ2YTcxZWYxMDc1ZjUzZWE0ZThkZGUzMjIxYWUxMGQ3ZA==');
+    var allIds=[];
+    for(var i=0;i<records.length;i+=10){
+      var batch=records.slice(i,i+10);
+      var res=await fetch('https://api.airtable.com/v0/'+BASE+'/'+TABLE,{
+        method:'POST',
+        headers:{'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json'},
+        body:JSON.stringify({records:batch,typecast:true})
+      });
+      var data=await res.json();
+      if(!res.ok)throw new Error(JSON.stringify(data.error||data));
+      (data.records||[]).forEach(function(r){allIds.push(r.id);});
+    }
+    document.getElementById('s7').classList.remove('active');
+    document.getElementById('okScr').classList.add('active');
+    document.getElementById('recId').textContent=allIds.length>1?allIds.length+' records bane':(allIds[0]||'OK');
+    document.getElementById('pFill').style.width='100%';
+    document.getElementById('sNum').textContent='✓';
+  }catch(err){
+    console.error('ERROR:',err);
+    var el=document.getElementById('eS');
+    el.textContent='⚠ Error: '+(err.message||'Try again');
+    el.classList.add('show');
+    document.getElementById('subBtn').disabled=false;
+    document.getElementById('subIcon').style.display='block';
+    document.getElementById('spin').style.display='none';
+  }
+}
+</script>
+</body>
+</html>
