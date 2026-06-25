@@ -177,15 +177,11 @@ kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 6p
 <!-- S5 -->
 <div class="card" id="s5">
   <div class="slbl"><span class="sdot">5</span>Request Vivaran</div>
-  <div class="q">Request ka <em>title</em> aur brief?</div>
+  <div class="q">Request ka <em>brief</em> kya hai?</div>
   <div class="fld">
-    <div class="flbl">Request Ka Sheersh *</div>
-    <input type="text" id="fTitle" placeholder="Jaise — Naye Product ke liye Instagram Post Banani Hai"/>
-    <div class="err" id="e5">&#9888; Kripya request ka title darj karein</div>
-  </div>
-  <div class="fld">
-    <div class="flbl">Details / Brief</div>
+    <div class="flbl">Details / Brief *</div>
     <textarea id="fDetails" placeholder="Kya chahiye, kaise chahiye, kis ke liye — jitna detail ho utna behtar..."></textarea>
+    <div class="err" id="e5">&#9888; Kripya brief likhen</div>
   </div>
   <div class="fld" id="sizeWrap" style="display:none">
     <div class="flbl">Aakaar &amp; Matra (Size &amp; Quantity)</div>
@@ -243,7 +239,7 @@ kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 6p
 // Token loaded from config.js (not committed to git)
 // See README for setup instructions
 var BASE='appWkwDXrGQdoLIqe',TABLE='tbl48Lc3uhiIwiben',TOKEN=atob('cGF0d3VGR1NxWDNFaDFVVGguMDRkZjU0ODc2ZWU5NDkzNTAxZDU5YTc5NzgwOGM4YWQ2YTcxZWYxMDc1ZjUzZWE0ZThkZGUzMjIxYWUxMGQ3ZA==');
-var F={title:'fldRTTEPAWJuzcpxY',name:'fldl79ohQowM5O7xr',email:'fldkKTOix3aWqFhQS',bu:'fldqBjvj2EalZdbmM',details:'fld1AJ7wja9D8b2F6',size:'fldvEl8i7uOJAnZfp',deadline:'fld3bHwczMgkzHy8w',refLink:'fldf8pvZoY4Ux39pK',taskHead:'fld2ME2FXwhJaJ0rH',social:'fld0JbtbN9jXnBc6V',content:'fldVgDcnnxSdliJZ6',web:'fldd6KxitHcVtyE4e',prez:'flda5LnWiOUWHIH3B',branding:'fldL0lgyjbp5t9hMf',print:'fldc1xVMcCz7vIwWK',outdoor:'fldDrk5EYQ0zQxlFg',photo:'fld2rlDPiujHfXKLs',other:'fldT2yGoBAnzPNLBS'};
+var F={title:'fldRTTEPAWJuzcpxY',taskTitle:'fld6RUUuPywxWutP7',name:'fldl79ohQowM5O7xr',email:'fldkKTOix3aWqFhQS',bu:'fldqBjvj2EalZdbmM',details:'fld1AJ7wja9D8b2F6',size:'fldvEl8i7uOJAnZfp',deadline:'fld3bHwczMgkzHy8w',refLink:'fldf8pvZoY4Ux39pK',taskHead:'fld2ME2FXwhJaJ0rH',social:'fld0JbtbN9jXnBc6V',content:'fldVgDcnnxSdliJZ6',web:'fldd6KxitHcVtyE4e',prez:'flda5LnWiOUWHIH3B',branding:'fldL0lgyjbp5t9hMf',print:'fldc1xVMcCz7vIwWK',outdoor:'fldDrk5EYQ0zQxlFg',photo:'fld2rlDPiujHfXKLs',other:'fldT2yGoBAnzPNLBS'};
 var BUS=['Central','Projects','Product','Residential','Dyulabs','Structure Manufacturing - Bavla','C&I','Module Manufacturing - Miroli','All in Kit'];
 var SIZE_CATS=['Print & Stationery','Outdoor & Events'];
 var CATS=[
@@ -300,25 +296,22 @@ if(n===1){ok=document.getElementById('fName').value.trim().length>1;showErr('e1'
 if(n===2){ok=document.getElementById('fPfx').value.trim().length>0;showErr('e2',!ok);}
 if(n===3){ok=!!ST.bu;showErr('e3',!ok);}
 if(n===4){var hasSub=ST.selCats.some(function(c){var cat=CATS.find(function(x){return x.l===c;});if(cat&&cat.s.length===0)return true;return ST.selSubs[c]&&ST.selSubs[c].length>0;});ok=ST.selCats.length>0&&hasSub;showErr('e4',!ok);}
-if(n===5){ok=document.getElementById('fTitle').value.trim().length>2;showErr('e5',!ok);}
+if(n===5){ok=document.getElementById('fDetails').value.trim().length>2;showErr('e5',!ok);}
 if(n===6){ok=!!document.getElementById('fDeadline').value;showErr('e6',!ok);}
 return ok;}
-function collect(n){if(n===1)ST.name=document.getElementById('fName').value.trim();if(n===2)ST.email=document.getElementById('fPfx').value.trim()+'@'+domain;if(n===5){ST.title=document.getElementById('fTitle').value.trim();ST.details=document.getElementById('fDetails').value.trim();ST.size=document.getElementById('fSize').value.trim();}if(n===6){ST.deadline=document.getElementById('fDeadline').value;ST.ref=document.getElementById('fRef').value.trim();}}
-function buildRev(){collect(5);collect(6);var allSubs=[];ST.selCats.forEach(function(c){(ST.selSubs[c]||[]).forEach(function(s){allSubs.push(s);});});var catHtml=ST.selCats.map(function(c){return '<span class="rtag">'+c+'</span>';}).join('');var subHtml=allSubs.map(function(s){return '<span class="rtag">'+s+'</span>';}).join('')||'-';var dl=ST.deadline?new Date(ST.deadline).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'-';var rows=[['&#128100; Naam',ST.name],['&#128231; Email',ST.email],['&#127963; BU',ST.bu],['&#128203; Categories',catHtml||'-'],['&#127919; Types',subHtml],['&#128204; Title', ST.selCats.length>1 ? '(Category prefix added per record)  '+ST.title : ST.title],['&#128221; Details',ST.details||'-'],['&#128336; Deadline',dl]];if(ST.size)rows.push(['&#128190; Size/Qty',ST.size]);if(ST.ref)rows.push(['&#128279; Reference',ST.ref]);document.getElementById('revBox').innerHTML=rows.map(function(r){return '<div class="rrow"><div class="rkey">'+r[0]+'</div><div class="rval">'+r[1]+'</div></div>';}).join('');}
+function collect(n){if(n===1)ST.name=document.getElementById('fName').value.trim();if(n===2)ST.email=document.getElementById('fPfx').value.trim()+'@'+domain;if(n===5){ST.details=document.getElementById('fDetails').value.trim();ST.size=document.getElementById('fSize').value.trim();var det=ST.details.substring(0,60).trim();ST.title=ST.selCats.length>0?ST.selCats[0]+' — '+det:det;}if(n===6){ST.deadline=document.getElementById('fDeadline').value;ST.ref=document.getElementById('fRef').value.trim();}}
+function buildRev(){collect(5);collect(6);var allSubs=[];ST.selCats.forEach(function(c){(ST.selSubs[c]||[]).forEach(function(s){allSubs.push(s);});});var catHtml=ST.selCats.map(function(c){return '<span class="rtag">'+c+'</span>';}).join('');var subHtml=allSubs.map(function(s){return '<span class="rtag">'+s+'</span>';}).join('')||'-';var dl=ST.deadline?new Date(ST.deadline).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'-';var rows=[['&#128100; Naam',ST.name],['&#128231; Email',ST.email],['&#127963; BU',ST.bu],['&#128203; Categories',catHtml||'-'],['&#127919; Types',subHtml],['&#128204; Task Title', ST.selCats.length>1 ? '(Har category ke liye auto-generate hoga)' : ST.title],['&#128221; Details',ST.details||'-'],['&#128336; Deadline',dl]];if(ST.size)rows.push(['&#128190; Size/Qty',ST.size]);if(ST.ref)rows.push(['&#128279; Reference',ST.ref]);document.getElementById('revBox').innerHTML=rows.map(function(r){return '<div class="rrow"><div class="rkey">'+r[0]+'</div><div class="rval">'+r[1]+'</div></div>';}).join('');}
 async function doSubmit(){
   // ST already populated from nxt() — do NOT re-collect from hidden DOM
-  if(!ST.title||ST.title.trim()===''){
-    var el=document.getElementById('eS');
-    if(el){el.textContent='⚠ Request title khaali hai. Wapas Step 5 mein jaayein.';el.classList.add('show');}
-    return;
-  }
   var records=[];
   ST.selCats.forEach(function(cl){
     var cat=CATS.find(function(x){return x.l===cl;});
     if(!cat)return;
     var subs=ST.selSubs[cl]||[];
     var fields={};
-    fields[F.title]=ST.selCats.length>1?cl+' — '+ST.title:ST.title;
+    var autoTitle=cl+' — '+(ST.details||'').substring(0,60).trim();
+    fields[F.title]=autoTitle;
+    fields[F.taskTitle]=autoTitle;
     fields[F.name]=ST.name;
     fields[F.email]=ST.email;
     fields[F.bu]=ST.bu;
@@ -330,7 +323,7 @@ async function doSubmit(){
     if(subs.length>0){var fk=F[cat.f]||F.other;fields[fk]=subs.join(', ');}
     records.push({fields:fields});
   });
-  if(records.length===0){records.push({fields:{[F.title]:ST.title,[F.name]:ST.name,[F.email]:ST.email,[F.bu]:ST.bu}});}
+  if(records.length===0){var fb=ST.details||'New Request';records.push({fields:{[F.title]:fb,[F.taskTitle]:fb,[F.name]:ST.name,[F.email]:ST.email,[F.bu]:ST.bu}});}
   document.getElementById('subBtn').disabled=true;
   document.getElementById('subIcon').style.display='none';
   document.getElementById('spin').style.display='block';
