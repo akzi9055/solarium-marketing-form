@@ -93,9 +93,42 @@
 const B = 'appWkwDXrGQdoLIqe', T = 'tbl48Lc3uhiIwiben';
 const TOK = atob('cGF0TUU3RkdMUEJqVHZqdjEuOWMwYWZlNzBkZWIzOTkzMDBlOGNlZDJmYmRhODZmZWE1YWI1MGY4ZDU2NjU5NjVjZGQ0MmZjMGQ5NGI0ZmZkZA==');
 
-const SC = { 'New':'#5587B6','Assigned':'#2A69A4','In Progress':'#FF8A2A','Done':'#2E9E72','Overdue':'#FF3A00' };
-const PAL = ['#004B92','#FF7300','#2A69A4','#FF8A2A','#5587B6','#FFB980','#80A5C9','#FF4D00','#AAC3DB','#2E9E72','#003261','#FF6000'];
-const TEAM_COLORS = ['#004B92','#FF7300','#2A69A4','#FF8A2A','#5587B6','#FFB980','#2E9E72','#FF4D00'];
+// Status: each semantically distinct
+const SC = {
+  'New':         '#4A90D9',  // clear blue
+  'Assigned':    '#9B59B6',  // purple
+  'In Progress': '#F39C12',  // amber
+  'Done':        '#27AE60',  // green
+  'Overdue':     '#E74C3C',  // red
+};
+
+// BU / Category palette: 12 maximally distinct colors
+const PAL = [
+  '#2E86AB', // steel blue
+  '#E84855', // crimson
+  '#3BB273', // emerald
+  '#F4A261', // sandy orange
+  '#8338EC', // violet
+  '#06D6A0', // teal
+  '#FFB703', // golden
+  '#E63946', // rose red
+  '#457B9D', // slate blue
+  '#2DC653', // lime green
+  '#FB5607', // vivid orange
+  '#6A4C93', // indigo
+];
+
+// Team: distinct enough for 5-6 people clearly
+const TEAM_COLORS = [
+  '#2E86AB', // steel blue
+  '#E84855', // crimson
+  '#3BB273', // emerald
+  '#F4A261', // sandy orange
+  '#8338EC', // violet
+  '#FFB703', // golden
+  '#06D6A0', // teal
+  '#FB5607', // vivid orange
+];
 
 let charts = {};
 
@@ -157,11 +190,11 @@ function render(records) {
     <div class="stats">
       ${[
         {l:'Total',v:records.length,a:'#002649'},
-        {l:'New',v:newC,a:'#5587B6'},
-        {l:'In Progress',v:inpC,a:'#FF8A2A'},
-        {l:'Assigned',v:assC,a:'#2A69A4'},
-        {l:'Done',v:doneC,a:'#2E9E72'},
-        {l:'Overdue',v:odC,a:'#FF3A00',s:'deadline crossed'},
+        {l:'New',v:newC,a:'#4A90D9'},
+        {l:'In Progress',v:inpC,a:'#F39C12'},
+        {l:'Assigned',v:assC,a:'#9B59B6'},
+        {l:'Done',v:doneC,a:'#27AE60'},
+        {l:'Overdue',v:odC,a:'#E74C3C',s:'deadline crossed'},
       ].map(c=>`<div class="stat" style="border-top-color:${c.a}">
         <div class="stat-label">${c.l}</div>
         <div class="stat-value">${c.v}</div>
@@ -208,7 +241,7 @@ function render(records) {
                 <td class="td-id">${f['Request ID']||'—'}</td>
                 <td class="td-title" title="${title}">${title}</td>
                 <td class="td-muted">${f['Task Head']||'—'}</td>
-                <td><span class="badge" style="background:${sc}22;color:${sc==='#AAC3DB'?'#002649':sc}">${s}</span></td>
+                <td><span class="badge" style="background:${sc}22;color:${sc}">${s}</span></td>
                 <td class="${od?'td-od':'td-muted'}">${dl}${od?' ⚠':''}</td>
                 <td class="td-muted">${f['Assignee']?.name?.split(' ')[0]||'Unassigned'}</td>
               </tr>`;
@@ -222,7 +255,7 @@ function render(records) {
   destroyChart('cStatus');
   charts['cStatus'] = new Chart(document.getElementById('cStatus'), {
     type: 'doughnut',
-    data: { labels: statusEntries.map(e=>e[0]), datasets:[{ data: statusEntries.map(e=>e[1]), backgroundColor: statusEntries.map(e=>SC[e[0]]||'#ccc'), borderWidth:2, borderColor:'transparent' }] },
+    data: { labels: statusEntries.map(e=>e[0]), datasets:[{ data: statusEntries.map(e=>e[1]), backgroundColor: statusEntries.map(e=>SC[e[0]]||'#ccc'), borderWidth:3, borderColor:'#fff' }] },
     options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} } }
   });
   document.getElementById('legStatus').innerHTML = statusEntries.map(([n,v])=>
@@ -252,7 +285,7 @@ function render(records) {
   const buColors = buSorted.map((_,i)=>PAL[i%PAL.length]);
   charts['cBU'] = new Chart(document.getElementById('cBU'), {
     type: 'doughnut',
-    data: { labels: buSorted.map(b=>b[0]), datasets:[{ data: buSorted.map(b=>b[1]), backgroundColor: buColors, borderWidth:2, borderColor:'transparent' }] },
+    data: { labels: buSorted.map(b=>b[0]), datasets:[{ data: buSorted.map(b=>b[1]), backgroundColor: buColors, borderWidth:3, borderColor:'#fff' }] },
     options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
   });
   document.getElementById('legBU').innerHTML = buSorted.map(([n,v],i)=>
