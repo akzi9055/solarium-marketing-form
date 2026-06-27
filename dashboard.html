@@ -93,8 +93,9 @@
 const B = 'appWkwDXrGQdoLIqe', T = 'tbl48Lc3uhiIwiben';
 const TOK = atob('cGF0TUU3RkdMUEJqVHZqdjEuOWMwYWZlNzBkZWIzOTkzMDBlOGNlZDJmYmRhODZmZWE1YWI1MGY4ZDU2NjU5NjVjZGQ0MmZjMGQ5NGI0ZmZkZA==');
 
-const SC = { 'New':'#AAC3DB','Assigned':'#7BAFD4','In Progress':'#FFD0AA','Done':'#5BAD8F','Overdue':'#E07070' };
-const PAL = ['#002649','#AAC3DB','#FFD0AA','#5BAD8F','#7BAFD4','#E07070','#A0B8D0','#F0C060','#70B090','#9080C0','#8090C0','#60A8C0'];
+const SC = { 'New':'#5587B6','Assigned':'#2A69A4','In Progress':'#FF8A2A','Done':'#2E9E72','Overdue':'#FF3A00' };
+const PAL = ['#004B92','#FF7300','#2A69A4','#FF8A2A','#5587B6','#FFB980','#80A5C9','#FF4D00','#AAC3DB','#2E9E72','#003261','#FF6000'];
+const TEAM_COLORS = ['#004B92','#FF7300','#2A69A4','#FF8A2A','#5587B6','#FFB980','#2E9E72','#FF4D00'];
 
 let charts = {};
 
@@ -156,11 +157,11 @@ function render(records) {
     <div class="stats">
       ${[
         {l:'Total',v:records.length,a:'#002649'},
-        {l:'New',v:newC,a:'#AAC3DB'},
-        {l:'In Progress',v:inpC,a:'#FFD0AA'},
-        {l:'Assigned',v:assC,a:'#7BAFD4'},
-        {l:'Done',v:doneC,a:'#5BAD8F'},
-        {l:'Overdue',v:odC,a:'#E07070',s:'deadline crossed'},
+        {l:'New',v:newC,a:'#5587B6'},
+        {l:'In Progress',v:inpC,a:'#FF8A2A'},
+        {l:'Assigned',v:assC,a:'#2A69A4'},
+        {l:'Done',v:doneC,a:'#2E9E72'},
+        {l:'Overdue',v:odC,a:'#FF3A00',s:'deadline crossed'},
       ].map(c=>`<div class="stat" style="border-top-color:${c.a}">
         <div class="stat-label">${c.l}</div>
         <div class="stat-value">${c.v}</div>
@@ -231,7 +232,7 @@ function render(records) {
   destroyChart('cTeam');
   charts['cTeam'] = new Chart(document.getElementById('cTeam'), {
     type: 'bar',
-    data: { labels: teamSorted.map(t=>t[0]), datasets:[{ data: teamSorted.map(t=>t[1]), backgroundColor:'#002649', borderRadius:6 }] },
+    data: { labels: teamSorted.map(t=>t[0]), datasets:[{ data: teamSorted.map(t=>t[1]), backgroundColor: teamSorted.map((_,i)=>TEAM_COLORS[i%TEAM_COLORS.length]), borderRadius:6 }] },
     options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#6B8AA8',font:{size:11}}}, y:{ticks:{color:'#6B8AA8',font:{size:10},stepSize:1},beginAtZero:true,grid:{color:'#F0F4F8'}} } }
   });
 
