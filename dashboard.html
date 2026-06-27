@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solarium Marketing Desk — Analytics</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F5F8FB; font-family: 'Inter', 'Segoe UI', sans-serif; color: #002649; min-height: 100vh; }
+
+  header { background: #002649; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .h-left .eyebrow { color: #AAC3DB; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; display: block; margin-bottom: 4px; }
+  .h-left h1 { color: #fff; font-size: 20px; font-weight: 600; }
+  .h-right { display: flex; align-items: center; gap: 12px; }
+  #updated { color: #AAC3DB; font-size: 12px; }
+  .refresh-btn { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.2); border-radius: 8px; padding: 7px 16px; font-size: 13px; cursor: pointer; }
+  .refresh-btn:hover { background: rgba(255,255,255,.22); }
+
+  main { padding: 24px 32px 48px; max-width: 1280px; margin: 0 auto; }
+
+  /* Stat Cards */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .stat { background: #fff; border-radius: 12px; padding: 16px 18px; border-top: 4px solid #002649; box-shadow: 0 1px 8px rgba(0,38,73,.06); }
+  .stat-label { font-size: 11px; color: #6B8AA8; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; margin-bottom: 6px; }
+  .stat-value { font-size: 34px; font-weight: 700; color: #002649; line-height: 1; }
+  .stat-sub { font-size: 11px; color: #6B8AA8; margin-top: 4px; }
+
+  /* Chart rows */
+  .row { display: grid; gap: 14px; margin-bottom: 14px; }
+  .row-2 { grid-template-columns: 1fr 1.5fr; }
+  .row-1 { grid-template-columns: 1fr; }
+  .box { background: #fff; border-radius: 12px; padding: 20px 22px; box-shadow: 0 1px 8px rgba(0,38,73,.06); }
+  .box h2 { font-size: 14px; font-weight: 600; color: #002649; margin-bottom: 16px; }
+  .chart-wrap { position: relative; }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .legend span { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #6B8AA8; }
+  .legend-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; display: inline-block; }
+
+  /* Bar chart (category) */
+  .bar-section { display: flex; flex-direction: column; gap: 7px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; }
+  .bar-name { font-size: 11px; color: #6B8AA8; width: 130px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 20px; background: #F0F4F8; border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 7px; transition: width .4s ease; }
+  .bar-fill span { font-size: 11px; font-weight: 600; color: #fff; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { padding: 8px 12px; text-align: left; font-size: 10px; font-weight: 600; color: #6B8AA8; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid #EDF2F7; }
+  td { padding: 10px 12px; border-bottom: 1px solid #F5F8FB; color: #002649; }
+  tr:nth-child(even) td { background: #FAFCFF; }
+  .td-id { font-family: monospace; font-size: 12px; font-weight: 700; }
+  .td-title { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .td-muted { color: #6B8AA8; font-size: 12px; }
+  .td-od { color: #E07070; font-size: 12px; font-weight: 600; }
+  .badge { border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
+
+  /* Loading / Error */
+  .center { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; gap: 14px; color: #6B8AA8; }
+  .spinner { width: 36px; height: 36px; border: 3px solid #EDF2F7; border-top-color: #002649; border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 768px) {
+    main { padding: 16px; }
+    .row-2 { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    header { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-left">
+    <span class="eyebrow">Solarium Green Energy</span>
+    <h1>Marketing Desk Analytics</h1>
+  </div>
+  <div class="h-right">
+    <span id="updated"></span>
+    <button class="refresh-btn" onclick="init()">↻ Refresh</button>
+  </div>
+</header>
+
+<main id="main">
+  <div class="center"><div class="spinner"></div><p>Loading dashboard...</p></div>
+</main>
+
+<script>
+const B = 'appWkwDXrGQdoLIqe', T = 'tbl48Lc3uhiIwiben';
+const TOK = atob('cGF0TUU3RkdMUEJqVHZqdjEuOWMwYWZlNzBkZWIzOTkzMDBlOGNlZDJmYmRhODZmZWE1YWI1MGY4ZDU2NjU5NjVjZGQ0MmZjMGQ5NGI0ZmZkZA==');
+
+const SC = { 'New':'#AAC3DB','Assigned':'#7BAFD4','In Progress':'#FFD0AA','Done':'#5BAD8F','Overdue':'#E07070' };
+const PAL = ['#002649','#AAC3DB','#FFD0AA','#5BAD8F','#7BAFD4','#E07070','#A0B8D0','#F0C060','#70B090','#9080C0','#8090C0','#60A8C0'];
+
+let charts = {};
+
+async function fetchAll() {
+  let all = [], offset = null;
+  do {
+    let url = `https://api.airtable.com/v0/${B}/${T}?pageSize=100${offset?'&offset='+offset:''}`;
+    const r = await fetch(url, { headers: { Authorization: `Bearer ${TOK}` } });
+    if (!r.ok) throw new Error('API error ' + r.status);
+    const d = await r.json();
+    all = all.concat(d.records || []);
+    offset = d.offset || null;
+  } while (offset);
+  return all.filter(r => !r.fields['Is Recurring Template']);
+}
+
+function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
+
+async function init() {
+  document.getElementById('main').innerHTML = '<div class="center"><div class="spinner"></div><p>Loading...</p></div>';
+  try {
+    const records = await fetchAll();
+    render(records);
+    document.getElementById('updated').textContent = 'Updated: ' + new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  } catch(e) {
+    document.getElementById('main').innerHTML = `<div class="center"><p style="color:#E07070">Error: ${e.message}</p><button class="refresh-btn" onclick="init()" style="margin-top:12px">Retry</button></div>`;
+  }
+}
+
+function render(records) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const sC={}, catC={}, teamC={}, buC={};
+  let newC=0,inpC=0,doneC=0,assC=0,odC=0;
+
+  records.forEach(r => {
+    const f = r.fields, s = f['Status']||'Unknown';
+    sC[s] = (sC[s]||0)+1;
+    if(s==='New') newC++;
+    else if(s==='In Progress') inpC++;
+    else if(s==='Done') doneC++;
+    else if(s==='Assigned') assC++;
+    if(f['Deadline'] && s!=='Done' && new Date(f['Deadline'])<today) odC++;
+    const cat = f['Task Head']||'Other';
+    catC[cat] = (catC[cat]||0)+1;
+    const nm = f['Assignee']?.name?.split(' ')[0]||'Unassigned';
+    teamC[nm] = (teamC[nm]||0)+1;
+    const bu = f['Business Unit']||'Unknown';
+    buC[bu] = (buC[bu]||0)+1;
+  });
+
+  const catSorted = Object.entries(catC).sort((a,b)=>b[1]-a[1]);
+  const teamSorted = Object.entries(teamC).sort((a,b)=>b[1]-a[1]);
+  const buSorted = Object.entries(buC).sort((a,b)=>b[1]-a[1]);
+  const statusEntries = Object.entries(sC);
+  const recent = [...records].sort((a,b)=>new Date(b.createdTime)-new Date(a.createdTime)).slice(0,6);
+  const catMax = catSorted[0]?.[1]||1;
+
+  document.getElementById('main').innerHTML = `
+    <div class="stats">
+      ${[
+        {l:'Total',v:records.length,a:'#002649'},
+        {l:'New',v:newC,a:'#AAC3DB'},
+        {l:'In Progress',v:inpC,a:'#FFD0AA'},
+        {l:'Assigned',v:assC,a:'#7BAFD4'},
+        {l:'Done',v:doneC,a:'#5BAD8F'},
+        {l:'Overdue',v:odC,a:'#E07070',s:'deadline crossed'},
+      ].map(c=>`<div class="stat" style="border-top-color:${c.a}">
+        <div class="stat-label">${c.l}</div>
+        <div class="stat-value">${c.v}</div>
+        ${c.s?`<div class="stat-sub">${c.s}</div>`:''}
+      </div>`).join('')}
+    </div>
+
+    <div class="row row-2">
+      <div class="box">
+        <h2>Status Distribution</h2>
+        <div class="chart-wrap" style="height:200px"><canvas id="cStatus" role="img" aria-label="Status distribution pie chart"></canvas></div>
+        <div class="legend" id="legStatus"></div>
+      </div>
+      <div class="box">
+        <h2>Team Workload</h2>
+        <div class="chart-wrap" style="height:200px"><canvas id="cTeam" role="img" aria-label="Team workload bar chart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="row row-2">
+      <div class="box">
+        <h2>Requests by Category</h2>
+        <div class="bar-section" id="catBars"></div>
+      </div>
+      <div class="box">
+        <h2>Business Unit Split</h2>
+        <div class="chart-wrap" style="height:200px"><canvas id="cBU" role="img" aria-label="Business unit doughnut chart"></canvas></div>
+        <div class="legend" id="legBU"></div>
+      </div>
+    </div>
+
+    <div class="row row-1">
+      <div class="box">
+        <h2>Recent Requests</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Request ID</th><th>Title</th><th>Category</th><th>Status</th><th>Deadline</th><th>Assignee</th></tr></thead>
+            <tbody>${recent.map(r=>{
+              const f=r.fields, s=f['Status']||'—', sc=SC[s]||'#ddd';
+              const dl=f['Deadline']?new Date(f['Deadline']).toLocaleDateString('en-IN',{day:'numeric',month:'short'}):'—';
+              const od=f['Deadline']&&s!=='Done'&&new Date(f['Deadline'])<today;
+              const title=f['Task Title']||(f['Details']||'').slice(0,40)||'—';
+              return `<tr>
+                <td class="td-id">${f['Request ID']||'—'}</td>
+                <td class="td-title" title="${title}">${title}</td>
+                <td class="td-muted">${f['Task Head']||'—'}</td>
+                <td><span class="badge" style="background:${sc}22;color:${sc==='#AAC3DB'?'#002649':sc}">${s}</span></td>
+                <td class="${od?'td-od':'td-muted'}">${dl}${od?' ⚠':''}</td>
+                <td class="td-muted">${f['Assignee']?.name?.split(' ')[0]||'Unassigned'}</td>
+              </tr>`;
+            }).join('')}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  // Status Pie
+  destroyChart('cStatus');
+  charts['cStatus'] = new Chart(document.getElementById('cStatus'), {
+    type: 'doughnut',
+    data: { labels: statusEntries.map(e=>e[0]), datasets:[{ data: statusEntries.map(e=>e[1]), backgroundColor: statusEntries.map(e=>SC[e[0]]||'#ccc'), borderWidth:2, borderColor:'transparent' }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} } }
+  });
+  document.getElementById('legStatus').innerHTML = statusEntries.map(([n,v])=>
+    `<span><span class="legend-dot" style="background:${SC[n]||'#ccc'}"></span>${n} (${v})</span>`).join('');
+
+  // Team Bar
+  destroyChart('cTeam');
+  charts['cTeam'] = new Chart(document.getElementById('cTeam'), {
+    type: 'bar',
+    data: { labels: teamSorted.map(t=>t[0]), datasets:[{ data: teamSorted.map(t=>t[1]), backgroundColor:'#002649', borderRadius:6 }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#6B8AA8',font:{size:11}}}, y:{ticks:{color:'#6B8AA8',font:{size:10},stepSize:1},beginAtZero:true,grid:{color:'#F0F4F8'}} } }
+  });
+
+  // Category custom bars
+  document.getElementById('catBars').innerHTML = catSorted.map(([n,v],i)=>`
+    <div class="bar-row">
+      <div class="bar-name" title="${n}">${n}</div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${Math.round(v/catMax*100)}%;background:${PAL[i%PAL.length]}">
+          <span>${v}</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  // BU Doughnut
+  destroyChart('cBU');
+  const buColors = buSorted.map((_,i)=>PAL[i%PAL.length]);
+  charts['cBU'] = new Chart(document.getElementById('cBU'), {
+    type: 'doughnut',
+    data: { labels: buSorted.map(b=>b[0]), datasets:[{ data: buSorted.map(b=>b[1]), backgroundColor: buColors, borderWidth:2, borderColor:'transparent' }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
+  });
+  document.getElementById('legBU').innerHTML = buSorted.map(([n,v],i)=>
+    `<span><span class="legend-dot" style="background:${buColors[i]}"></span>${n} (${v})</span>`).join('');
+}
+
+init();
+</script>
+</body>
+</html>
