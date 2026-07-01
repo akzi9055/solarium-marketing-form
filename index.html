@@ -210,6 +210,14 @@ kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 6p
     <div class="flbl">Reference / Inspiration Link (Vaikalpik)</div>
     <input type="text" id="fRef" placeholder="Google Drive / Dropbox / WeTransfer ya koi bhi link..."/>
   </div>
+  <div class="fld">
+    <div class="flbl">File Attach Karein (Vaikalpik)</div>
+    <label id="fileLabel" style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:12px 16px;border:2px dashed #AAC3DB;border-radius:12px;color:#666;font-size:0.95rem;transition:border-color 0.2s">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#AAC3DB" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span id="fileLabelTxt">File chunein ya yahan drag karein</span>
+      <input type="file" id="fFile" style="display:none" onchange="updFileLabel()"/>
+    </label>
+  </div>
   <div class="btnrow">
     <button class="bbck" onclick="bck(6)">&#8592; Back</button>
     <button class="bnxt" onclick="nxt(6)">Review Karein <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
@@ -242,7 +250,7 @@ kbd{display:inline-flex;align-items:center;justify-content:center;padding:2px 6p
 // Token loaded from config.js (not committed to git)
 // See README for setup instructions
 var BASE='appWkwDXrGQdoLIqe',TABLE='tbl48Lc3uhiIwiben',TOKEN=atob('cGF0d3VGR1NxWDNFaDFVVGguMDRkZjU0ODc2ZWU5NDkzNTAxZDU5YTc5NzgwOGM4YWQ2YTcxZWYxMDc1ZjUzZWE0ZThkZGUzMjIxYWUxMGQ3ZA==');
-var F={title:'fldRTTEPAWJuzcpxY',taskTitle:'fld6RUUuPywxWutP7',name:'fldl79ohQowM5O7xr',email:'fldkKTOix3aWqFhQS',bu:'fldqBjvj2EalZdbmM',details:'fld1AJ7wja9D8b2F6',size:'fldvEl8i7uOJAnZfp',deadline:'fld3bHwczMgkzHy8w',refLink:'fldf8pvZoY4Ux39pK',taskHead:'fld2ME2FXwhJaJ0rH',social:'fld0JbtbN9jXnBc6V',content:'fldVgDcnnxSdliJZ6',web:'fldd6KxitHcVtyE4e',prez:'flda5LnWiOUWHIH3B',branding:'fldL0lgyjbp5t9hMf',print:'fldc1xVMcCz7vIwWK',outdoor:'fldDrk5EYQ0zQxlFg',photo:'fld2rlDPiujHfXKLs',other:'fldT2yGoBAnzPNLBS'};
+var F={title:'fldRTTEPAWJuzcpxY',taskTitle:'fld6RUUuPywxWutP7',name:'fldl79ohQowM5O7xr',email:'fldkKTOix3aWqFhQS',bu:'fldqBjvj2EalZdbmM',details:'fld1AJ7wja9D8b2F6',size:'fldvEl8i7uOJAnZfp',deadline:'fld3bHwczMgkzHy8w',refLink:'fldf8pvZoY4Ux39pK',taskHead:'fld2ME2FXwhJaJ0rH',social:'fld0JbtbN9jXnBc6V',content:'fldVgDcnnxSdliJZ6',web:'fldd6KxitHcVtyE4e',prez:'flda5LnWiOUWHIH3B',branding:'fldL0lgyjbp5t9hMf',print:'fldc1xVMcCz7vIwWK',outdoor:'fldDrk5EYQ0zQxlFg',photo:'fld2rlDPiujHfXKLs',other:'fldT2yGoBAnzPNLBS',refAttach:'fldPQrWwGk5Q5RpCO'};
 var BUS=['Central','Projects','Product','Residential','Dyulabs','Structure Manufacturing - Bavla','C&I','Module Manufacturing - Miroli','All in Kit'];
 var SIZE_CATS=['Print & Stationery','Outdoor & Events'];
 var CATS=[
@@ -262,7 +270,7 @@ var CATS=[
   {l:'Other / Custom',i:'💬',f:'other',s:[]}
 ];
 var cur=1,domain='solariumenergy.in';
-var ST={name:'',email:'',bu:'',selCats:[],selSubs:{},title:'',details:'',size:'',deadline:'',ref:''};
+var ST={name:'',email:'',bu:'',selCats:[],selSubs:{},title:'',details:'',size:'',deadline:'',ref:'',attachFile:null};
 (function(){
   var bg=document.getElementById('buGrid');
   BUS.forEach(function(b){var el=document.createElement('div');el.className='bu-opt';el.textContent=b;el.onclick=function(){document.querySelectorAll('.bu-opt').forEach(function(x){x.classList.remove('on')});el.classList.add('on');ST.bu=b;};bg.appendChild(el);});
@@ -302,8 +310,9 @@ if(n===4){var hasSub=ST.selCats.some(function(c){var cat=CATS.find(function(x){r
 if(n===5){ok=document.getElementById('fDetails').value.trim().length>2;showErr('e5',!ok);}
 if(n===6){ok=!!document.getElementById('fDeadline').value;showErr('e6',!ok);}
 return ok;}
-function collect(n){if(n===1)ST.name=document.getElementById('fName').value.trim();if(n===2){var raw=document.getElementById('fPfx').value.trim();var pfx=raw.includes('@')?raw.split('@')[0]:raw;ST.email=pfx+'@'+domain;}if(n===5){ST.details=document.getElementById('fDetails').value.trim();ST.size=document.getElementById('fSize').value.trim();var det=ST.details.substring(0,60).trim();ST.title=ST.selCats.length>0?ST.selCats[0]+' — '+det:det;}if(n===6){ST.deadline=document.getElementById('fDeadline').value;ST.ref=document.getElementById('fRef').value.trim();}}
+function collect(n){if(n===1)ST.name=document.getElementById('fName').value.trim();if(n===2){var raw=document.getElementById('fPfx').value.trim();var pfx=raw.includes('@')?raw.split('@')[0]:raw;ST.email=pfx+'@'+domain;}if(n===5){ST.details=document.getElementById('fDetails').value.trim();ST.size=document.getElementById('fSize').value.trim();var det=ST.details.substring(0,60).trim();ST.title=ST.selCats.length>0?ST.selCats[0]+' — '+det:det;}if(n===6){ST.deadline=document.getElementById('fDeadline').value;ST.ref=document.getElementById('fRef').value.trim();var ff=document.getElementById('fFile');ST.attachFile=(ff&&ff.files&&ff.files[0])||null;}}
 function buildRev(){collect(5);collect(6);var allSubs=[];ST.selCats.forEach(function(c){(ST.selSubs[c]||[]).forEach(function(s){allSubs.push(s);});});var catHtml=ST.selCats.map(function(c){return '<span class="rtag">'+c+'</span>';}).join('');var subHtml=allSubs.map(function(s){return '<span class="rtag">'+s+'</span>';}).join('')||'-';var dl=ST.deadline?new Date(ST.deadline).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'-';var rows=[['&#128100; Naam',ST.name],['&#128231; Email',ST.email],['&#127963; BU',ST.bu],['&#128203; Categories',catHtml||'-'],['&#127919; Types',subHtml],['&#128204; Task Title', ST.selCats.length>1 ? '(Har category ke liye auto-generate hoga)' : ST.title],['&#128221; Details',ST.details||'-'],['&#128336; Deadline',dl]];if(ST.size)rows.push(['&#128190; Size/Qty',ST.size]);if(ST.ref)rows.push(['&#128279; Reference',ST.ref]);document.getElementById('revBox').innerHTML=rows.map(function(r){return '<div class="rrow"><div class="rkey">'+r[0]+'</div><div class="rval">'+r[1]+'</div></div>';}).join('');}
+function updFileLabel(){var ff=document.getElementById('fFile');var lbl=document.getElementById('fileLabelTxt');var label=document.getElementById('fileLabel');if(ff&&ff.files&&ff.files[0]){lbl.textContent='✓ '+ff.files[0].name;label.style.borderColor='#27AE60';label.style.color='#27AE60';}else{lbl.textContent='File chunein ya yahan drag karein';label.style.borderColor='#AAC3DB';label.style.color='#666';}}
 async function doSubmit(){
   // ST already populated from nxt() — do NOT re-collect from hidden DOM
   var records=[];
@@ -344,6 +353,20 @@ async function doSubmit(){
       var data=await res.json();
       if(!res.ok)throw new Error(JSON.stringify(data.error||data));
       (data.records||[]).forEach(function(r){allIds.push(r.id);});
+    }
+    // Upload attachment to all created records if file selected
+    if(ST.attachFile&&allIds.length>0){
+      var TOKEN2=atob('cGF0d3VGR1NxWDNFaDFVVGguMDRkZjU0ODc2ZWU5NDkzNTAxZDU5YTc5NzgwOGM4YWQ2YTcxZWYxMDc1ZjUzZWE0ZThkZGUzMjIxYWUxMGQ3ZA==');
+      for(var j=0;j<allIds.length;j++){
+        var fd=new FormData();
+        fd.append('file',ST.attachFile,ST.attachFile.name);
+        fd.append('filename',ST.attachFile.name);
+        await fetch('https://api.airtable.com/v0/'+BASE+'/'+TABLE+'/'+allIds[j]+'/'+F.refAttach+'/uploadAttachment',{
+          method:'POST',
+          headers:{'Authorization':'Bearer '+TOKEN2},
+          body:fd
+        });
+      }
     }
     document.getElementById('s7').classList.remove('active');
     document.getElementById('okScr').classList.add('active');
